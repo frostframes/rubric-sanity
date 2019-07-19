@@ -1,62 +1,64 @@
 <script>
-    import { beforeUpdate } from "svelte";
-    export let data;
-    let rubric = {};
-    beforeUpdate(function() {
-      if (
-        data.Rubric !== undefined &&
-        data.Rubric[0] !== undefined &&
-        data.RubricScale !== undefined
-      ) {
-        rubric = {
-          criteria: [],
-          title: data.Rubric[0].name,
-          scales: data.RubricScale
-        };
-        for (let criterionId of data.Rubric[0].criterion) {
-          rubric.criteria.push(
-            data.RubricCriterion.filter(element => element.id === criterionId)[0]
-          );
-        }
-      } else {
-        rubric = {
-          criteria: [],
-          scales: [],
-          title: ""
-        };
+  import { beforeUpdate } from "svelte";
+  export let data;
+  let rubric = {};
+  beforeUpdate(function() {
+    if (
+      data.Rubric !== undefined &&
+      data.Rubric[0] !== undefined &&
+      data.RubricScale !== undefined
+    ) {
+      rubric = {
+        criteria: [],
+        title: data.Rubric[0].name,
+        scales: data.RubricScale
+      };
+      for (let criterionId of data.Rubric[0].criterion) {
+        rubric.criteria.push(
+          data.RubricCriterion.filter(element => element.id === criterionId)[0]
+        );
       }
-    });
+    } else {
+      rubric = {
+        criteria: [],
+        scales: [],
+        title: ""
+      };
+    }
+  });
 </script>
 
 <style>
-    td,
-    th {
-      font-size: small;
-      text-align: left;
-      vertical-align: top;
-      border-bottom: 1px solid grey;
-      padding: 10px;
-      font-weight: normal;
-      width: 15%;
-      position: relative;
-    }
-    th {
-      background-color: #eee;
-    }
-    h2,
-    p {
-      margin: 0;
-    }
-    table {
-      border-collapse: collapse;
-    }
-    code {
-      position: absolute;
-      right: 0;
-      top: 5px;
-      font-size: 2em;
-      opacity: 0.5;
-    }
+  td,
+  th {
+    font-size: small;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid grey;
+    padding: 10px;
+    font-weight: normal;
+    width: 15%;
+    position: relative;
+  }
+  th {
+    background-color: #eee;
+  }
+  h2,
+  p {
+    margin: 0;
+  }
+  table {
+    border-collapse: collapse;
+    border: lightgray 1px solid;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  }
+  code {
+    position: absolute;
+    right: 0;
+    top: 6px;
+    font-size: 2em;
+    opacity: 0.5;
+  }
 </style>
 
 <h1>{rubric.title}</h1>
