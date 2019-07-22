@@ -11,6 +11,9 @@
     "sirv-cli": "^0.3.1"
   },
   "dependencies": {
+    "@types/file-saver": "^2.0.1",
+    "docx": "^5.0.0-rc4",
+    "file-saver": "^2.0.2",
     "svelte": "^3.0.0"
   },
   "scripts": {
