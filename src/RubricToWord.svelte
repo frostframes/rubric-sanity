@@ -15,6 +15,12 @@
     return new docx.Paragraph(text);
   }
 
+  function removeVerticalBorders(cell) {
+    const borderStyle = docx.BorderStyle.NONE;
+    cell.Borders.addStartBorder(borderStyle, 0, '#ffffff');
+    cell.Borders.addEndBorder(borderStyle, 0, '#ffffff');
+  }
+
   function onClick() {
     const doc = new docx.Document();
     const packer = new docx.Packer();
@@ -31,12 +37,24 @@
       columns: data.RubricScale.length + 1,
     });
 
+    // Format empty cells at top-left
+    cell = table.getCell(0, 0);
+    removeVerticalBorders(cell);
+    cell.Borders.addBottomBorder(docx.BorderStyle.NONE, 0, '#ffffff');
+    cell = table.getCell(1, 0);
+    removeVerticalBorders(cell);
+    cell.Borders.addTopBorder(docx.BorderStyle.NONE, 0, '#ffffff');
+
     // Add header row (scale titles and values)
     for (let scale of data.RubricScale) {
       cell = table.getCell(0, scale.position);
       cell.addParagraph(setRomanParagraph(scale.name).center().heading3());
+      removeVerticalBorders(cell);
+      cell.Borders.addBottomBorder(docx.BorderStyle.NONE, 0, '#ffffff');
       cell = table.getCell(1, scale.position);
       cell.addParagraph(setItalicsParagraph(scale.value).center());
+      removeVerticalBorders(cell);
+      cell.Borders.addTopBorder(docx.BorderStyle.NONE, 0, '#ffffff');
     }
 
     // Add criteria
@@ -49,6 +67,7 @@
       cell.addParagraph(setItalicsParagraph(`${criterion.value}%`));
       // Add criterion description
       cell.addParagraph(setRomanParagraph(criterion.description));
+      removeVerticalBorders(cell);
       // Add cells
       for (let scaleIndex in criterion.criterion_scales) {
         // index must be a number
@@ -56,6 +75,7 @@
         descriptionText = data.RubricCriterionScale.filter(item => item.id === criterion.criterion_scales[scaleIndex])[0].description;
         cell = table.getCell((criterion.position + 1), (scaleIndex + 1));
         cell.addParagraph(setRomanParagraph(descriptionText));
+        removeVerticalBorders(cell);
       }
     }
 
