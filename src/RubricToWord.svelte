@@ -22,7 +22,13 @@
   }
 
   function onClick() {
-    const doc = new docx.Document();
+    const doc = new docx.Document(undefined, {
+        orientation: "landscape",
+        top: 500,
+        right: 500,
+        bottom: 500,
+        left: 500,
+    });
     const packer = new docx.Packer();
     let cell;
     let criterion;
