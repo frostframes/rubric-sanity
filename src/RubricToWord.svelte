@@ -3,6 +3,7 @@
   import docx from 'docx';
   import FileSaver from 'file-saver';
   export let rubric;
+  export let label = 'Download Word document';
   const bodyFontName = 'Calibri';
 
   function setRomanParagraph(string) {
@@ -94,6 +95,14 @@
   }
 
 </script>
+
+<style>
+button {
+  font-size: large;
+  padding: 10px;
+}
+</style>
+
 {#if rubric !== undefined && rubric.title !== ''}
-  <button on:click={onClick}>Download as Word</button>
+  <button on:click={onClick}>{ label }</button>
 {/if}

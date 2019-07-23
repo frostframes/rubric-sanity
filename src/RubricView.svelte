@@ -64,7 +64,7 @@
   }
 </style>
 
-<RubricToWord rubric={rubric} />
+<RubricToWord label={'Download as Word'} rubric={rubric} />
 
 <h1>{rubric.title}</h1>
 <table>
