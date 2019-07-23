@@ -1,14 +1,25 @@
 <script>
-  import { beforeUpdate } from "svelte";
-  import docx from "docx";
-  import FileSaver from "file-saver";
+  import { beforeUpdate } from 'svelte';
+  import docx from 'docx';
+  import FileSaver from 'file-saver';
   export let data;
+  const bodyFontName = 'Calibri';
   let rubric = {};
 
   beforeUpdate(function() {
     // Clear any previouly loaded rubric data
     rubric = {};
   })
+
+  function setRomanParagraph(string) {
+    const text = new docx.TextRun(string).font(bodyFontName);
+    return new docx.Paragraph(text);
+  }
+
+  function setItalicsParagraph(string) {
+    const text = new docx.TextRun(string).font(bodyFontName).italics();
+    return new docx.Paragraph(text);
+  }
 
   function onClick() {
     const doc = new docx.Document();
@@ -23,7 +34,7 @@
     };
 
     // Add title
-    doc.addParagraph(new docx.Paragraph(rubric.title).title());
+    doc.addParagraph(setRomanParagraph(rubric.title).title());
 
     // Create table. Will be added once content is inserted.
     let table = new docx.Table({
@@ -34,9 +45,9 @@
     // Add header row (scale titles and values)
     for (let scale of rubric.scales) {
       cell = table.getCell(0, scale.position);
-      cell.addParagraph(new docx.Paragraph(scale.name).center().heading3());
+      cell.addParagraph(setRomanParagraph(scale.name).center().heading3());
       cell = table.getCell(1, scale.position);
-      cell.addParagraph(new docx.Paragraph(scale.value).center());
+      cell.addParagraph(setItalicsParagraph(scale.value).center());
     }
 
     // Add criteria
@@ -45,18 +56,18 @@
       rubric.criteria.push(criterion);
       cell = table.getCell((criterion.position + 1), 0);
       // Add criterion title
-      cell.addParagraph(new docx.Paragraph(criterion.name).heading3());
+      cell.addParagraph(setRomanParagraph(criterion.name).heading3());
       // Add criterion weighting
-      cell.addParagraph(new docx.Paragraph(`${criterion.value}%`).center());
+      cell.addParagraph(setItalicsParagraph(`${criterion.value}%`));
       // Add criterion description
-      cell.addParagraph(new docx.Paragraph(criterion.description));
+      cell.addParagraph(setRomanParagraph(criterion.description));
       // Add cells
       for (let scaleIndex in criterion.criterion_scales) {
         // index must be a number
         scaleIndex = Number(scaleIndex);
         descriptionText = data.RubricCriterionScale.filter(item => item.id === criterion.criterion_scales[scaleIndex])[0].description;
         cell = table.getCell((criterion.position + 1), (scaleIndex + 1));
-        cell.addParagraph(new docx.Paragraph(descriptionText));
+        cell.addParagraph(setRomanParagraph(descriptionText));
       }
     }
 
