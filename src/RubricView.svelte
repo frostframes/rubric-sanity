@@ -1,5 +1,6 @@
 <script>
-  import { beforeUpdate } from "svelte";
+  import { beforeUpdate } from 'svelte';
+	import RubricToWord from './RubricToWord.svelte';
   export let data;
   let rubric = {};
   beforeUpdate(function() {
@@ -10,6 +11,7 @@
     ) {
       rubric = {
         criteria: [],
+        descriptors: data.RubricCriterionScale,
         title: data.Rubric[0].name,
         scales: data.RubricScale
       };
@@ -21,8 +23,9 @@
     } else {
       rubric = {
         criteria: [],
+        descriptors: [],
         scales: [],
-        title: ""
+        title: ''
       };
     }
   });
@@ -61,6 +64,8 @@
   }
 </style>
 
+<RubricToWord rubric={rubric} />
+
 <h1>{rubric.title}</h1>
 <table>
   <thead>
@@ -90,7 +95,7 @@
         </p>
       </th>
       {#each rubric.scales as scale}
-        <td>{data.RubricCriterionScale.filter(element => (element.criterion === criterion.id && element.scale_value === scale.id))[0].description}</td>
+        <td>{rubric.descriptors.filter(element => (element.criterion === criterion.id && element.scale_value === scale.id))[0].description}</td>
       {/each}
     </tr>
   {/each}
