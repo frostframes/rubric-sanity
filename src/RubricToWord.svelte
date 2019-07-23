@@ -4,12 +4,6 @@
   import FileSaver from 'file-saver';
   export let data;
   const bodyFontName = 'Calibri';
-  let rubric = {};
-
-  beforeUpdate(function() {
-    // Clear any previouly loaded rubric data
-    rubric = {};
-  })
 
   function setRomanParagraph(string) {
     const text = new docx.TextRun(string).font(bodyFontName);
@@ -27,23 +21,18 @@
     let cell;
     let criterion;
     let descriptionText = '';
-    rubric = {
-      criteria: [],
-      title: data.Rubric[0].name,
-      scales: data.RubricScale
-    };
 
     // Add title
-    doc.addParagraph(setRomanParagraph(rubric.title).title());
+    doc.addParagraph(setRomanParagraph(data.Rubric[0].name).title());
 
     // Create table. Will be added once content is inserted.
     let table = new docx.Table({
       rows: data.Rubric[0].criterion.length + 2,
-      columns: rubric.scales.length + 1,
+      columns: data.RubricScale.length + 1,
     });
 
     // Add header row (scale titles and values)
-    for (let scale of rubric.scales) {
+    for (let scale of data.RubricScale) {
       cell = table.getCell(0, scale.position);
       cell.addParagraph(setRomanParagraph(scale.name).center().heading3());
       cell = table.getCell(1, scale.position);
@@ -53,7 +42,6 @@
     // Add criteria
     for (let criterionId of data.Rubric[0].criterion) {
       criterion = data.RubricCriterion.filter(element => element.id === criterionId)[0];
-      rubric.criteria.push(criterion);
       cell = table.getCell((criterion.position + 1), 0);
       // Add criterion title
       cell.addParagraph(setRomanParagraph(criterion.name).heading3());
@@ -76,7 +64,7 @@
 
     // Download the word doc as a file to the client web browser
     packer.toBlob(doc).then((blob) => {
-      FileSaver.saveAs(blob, rubric.title + '.docx');
+      FileSaver.saveAs(blob, `${data.Rubric[0].name}.docx`);
     });
   }
 
