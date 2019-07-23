@@ -56,11 +56,9 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
   }
   code {
-    position: absolute;
-    right: 0;
-    top: 6px;
-    font-size: 2em;
-    opacity: 0.5;
+    font-size: 1.5em;
+    opacity: 0.75;
+    font-style: italic;
   }
 </style>
 
@@ -76,6 +74,15 @@
       {#each rubric.scales as scale}
         <th>
           <h2>{scale.name}</h2>
+        </th>
+      {/each}
+    </tr>
+    <tr>
+    {#if rubric.scales.length > 0}
+      <th></th>
+    {/if}
+      {#each rubric.scales as scale}
+        <th>
           <code>{scale.value}</code>
         </th>
       {/each}
@@ -86,11 +93,11 @@
       <th>
         <h2>{criterion.name}</h2>
         <p>
-        {#if criterion.description !== null}
-          <p>{criterion.description}</p>
-        {/if}
         {#if criterion.value !== null}
           <code>{criterion.value}%</code>
+        {/if}
+        {#if criterion.description !== null}
+          <p>{criterion.description}</p>
         {/if}
         </p>
       </th>
