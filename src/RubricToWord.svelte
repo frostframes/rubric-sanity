@@ -36,7 +36,7 @@
     let descriptionText = '';
 
     // Add title
-    doc.addParagraph(setRomanParagraph(rubric.name).title());
+    doc.addParagraph(setRomanParagraph(rubric.title).title());
 
     // Create table. Will be added once content is inserted.
     let table = new docx.Table({
