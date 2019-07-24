@@ -33,7 +33,6 @@
     const packer = new docx.Packer();
     let cell;
     let criterion;
-    let descriptionText = '';
 
     // Add title
     doc.addParagraph(setRomanParagraph(rubric.title).title());
@@ -59,7 +58,7 @@
       removeVerticalBorders(cell);
       cell.Borders.addBottomBorder(docx.BorderStyle.NONE, 0, '#ffffff');
       cell = table.getCell(1, scale.position);
-      cell.addParagraph(setItalicsParagraph(scale.value).center());
+      cell.addParagraph(setItalicsParagraph(scale.value > 0 ? scale.value : '').center());
       removeVerticalBorders(cell);
       cell.Borders.addTopBorder(docx.BorderStyle.NONE, 0, '#ffffff');
     }
@@ -70,17 +69,22 @@
       // Add criterion title
       cell.addParagraph(setRomanParagraph(criterion.name).heading3());
       // Add criterion weighting
-      cell.addParagraph(setItalicsParagraph(`${criterion.value}%`));
+      if (criterion.value !== '0' && criterion.value !== null) {
+        cell.addParagraph(setItalicsParagraph(`${criterion.value}%`));
+      }
       // Add criterion description
       cell.addParagraph(setRomanParagraph(criterion.description));
       removeVerticalBorders(cell);
       // Add cells
-      for (let scaleIndex in criterion.criterion_scales) {
+      for (let scaleIndex in criterion.scales) {
         // index must be a number
         scaleIndex = Number(scaleIndex);
-        descriptionText = rubric.descriptors.filter(item => item.id === criterion.criterion_scales[scaleIndex])[0].description;
+        let scale = criterion.scales[scaleIndex];
         cell = table.getCell((criterion.position + 1), (scaleIndex + 1));
-        cell.addParagraph(setRomanParagraph(descriptionText));
+        if (criterion.value === '0') {
+          cell.addParagraph(setItalicsParagraph(`${scale.value} marks`));
+        }
+        cell.addParagraph(setRomanParagraph(scale.description));
         removeVerticalBorders(cell);
       }
     }
