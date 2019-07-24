@@ -5,11 +5,13 @@
 </script>
 
 <style>
-  body {
+  section {
     font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    min-height: 100rem;
   }
 </style>
-<body lang="en">
-<Upload message="Please choose an .rbc file exported from TurnItIn." />
-<RubricView data={$jsonData} />
-</body>
+
+<section>
+  <Upload message="Please choose an .rbc file exported from TurnItIn." />
+  <RubricView data={$jsonData} />
+</section>

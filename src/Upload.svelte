@@ -1,6 +1,6 @@
 <script>
     import { jsonData } from "./stores.js";
-    let ok = true;
+    let ok;
     const errorMessage = "I'm sorry, that file doesn't look right. ";
     export let message = "Please choose a file";
     function onchange() {
@@ -39,6 +39,22 @@
       background-color: pink;
       border-color: darksalmon;
     }
+    iframe {
+      display: block;
+      width: 660px;
+      height: 540px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 20px;
+    }
+    p {
+      text-align: center;
+    }
 </style>
-<h2>{ok ? '' : errorMessage}{message}</h2>
-<input type="file" on:change={onchange} class={ok ? '' : 'error'} />
+<h2>{ok === false ? errorMessage : ''}{message}</h2>
+<input type="file" on:change={onchange} class={ok === false ? 'error' : ''} />
+
+{#if !ok}
+<p>How to get a .rbc file from TurnItIn</p>
+<iframe src="https://www.youtube.com/embed/gxqLRZq-0p4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{/if}
