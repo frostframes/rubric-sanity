@@ -38,10 +38,11 @@
     doc.addParagraph(setRomanParagraph(rubric.title).title());
 
     // Create table. Will be added once content is inserted.
-    let table = new docx.Table({
-      rows: rubric.criteria.length + 2,
-      columns: rubric.scales.length + 1,
-    });
+    if (rubric.scales.length > 0) {
+      let table = new docx.Table({
+        rows: rubric.criteria.length + 2,
+        columns: rubric.scales.length + 1,
+      });
 
     // Format empty cells at top-left
     cell = table.getCell(0, 0);
@@ -92,11 +93,19 @@
     // Add the table into the document
     doc.addTable(table);
 
-    // Download the word doc as a file to the client web browser
+  }
+   else {
+    for (let criterion of rubric.criteria) {
+      doc.addParagraph(setRomanParagraph(criterion.name).heading2());
+      doc.addParagraph(setRomanParagraph(criterion.description));
+    }
+  }
+      // Download the word doc as a file to the client web browser
     packer.toBlob(doc).then((blob) => {
       FileSaver.saveAs(blob, `${rubric.title}.docx`);
     });
   }
+
 
 </script>
 

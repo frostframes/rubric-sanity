@@ -12,8 +12,8 @@
     ) {
       rubric = {
         criteria: [],
+        scales: data.RubricScale,
         title: data.Rubric[0].name,
-        scales: data.RubricScale
       };
       for (let criterionId of data.Rubric[0].criterion) {
         let criterion = data.RubricCriterion.filter(element => element.id === criterionId)[0];
@@ -28,12 +28,22 @@
         }
         rubric.criteria.push(criterion);
       }
+    } else if (
+      data.Rubric !== undefined &&
+      data.Rubric[0] !== undefined &&
+      data.RubricCriterion !== undefined
+    ) {
+      rubric = {
+        criteria: data.RubricCriterion,
+        scales: [],
+        title: data.Rubric[0].name,
+      };
+    
     } else {
       rubric = {
         criteria: [],
-        descriptors: [],
         scales: [],
-        title: ''
+        title: '',
       };
     }
   });
@@ -73,12 +83,11 @@
 <RubricToWord label={'Download as Word'} rubric={rubric} />
 
 <h1>{rubric.title}</h1>
+{#if rubric.scales.length > 0}
 <table>
   <thead>
     <tr>
-    {#if rubric.scales.length > 0}
       <th></th>
-    {/if}
       {#each rubric.scales as scale}
         <th>
           <h2>{scale.name}</h2>
@@ -86,9 +95,7 @@
       {/each}
     </tr>
     <tr>
-    {#if rubric.scales.length > 0}
       <th></th>
-    {/if}
       {#each rubric.scales as scale}
         <th>
           {#if scale.value > 0}
@@ -122,3 +129,13 @@
     </tr>
   {/each}
 </table>
+{:else if rubric.criteria.length > 0}
+  <ul>
+  {#each rubric.criteria as criterion}
+    <li>
+      <h3>{criterion.name}</h3>
+      <p>{criterion.description}</p>
+    </li>
+  {/each}
+  </ul>
+{/if}
