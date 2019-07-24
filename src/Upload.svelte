@@ -56,5 +56,5 @@
 
 {#if !ok}
 <p>How to get a .rbc file from TurnItIn</p>
-<iframe src="https://www.youtube.com/embed/gxqLRZq-0p4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe src="https://www.youtube.com/embed/gxqLRZq-0p4" title="Video: how to get your .rbc files" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 {/if}
