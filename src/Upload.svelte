@@ -33,7 +33,7 @@
     }
     h2 {
       margin: 0;
-      padding: 20px;
+      padding: 20px 0;
     }
     .error {
       background-color: pink;

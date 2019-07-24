@@ -5,11 +5,27 @@
 </script>
 
 <style>
-  section {
+  header, section {
     font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  header {
+    background-color: #48c;
+    margin: -22px -8px 0 -8px;
+    padding: 30px 30px 20px 30px;
+    box-shadow: 0 5px 5px 0 rgba(0, 0, 0, .3);
+    border-bottom: #249 solid 1px;
+    color: white;
+  }
+  section {
     min-height: 100rem;
+    padding: 20px;
   }
 </style>
+
+<header>
+<h1>Rubric sanity</h1>
+<p>Convert your rubric to a word document. Email <a href="mailto:c.frost1@uq.edu.au">Chris</a> if there is something else you haven't been able to do with your rubrics.</p>
+</header>
 
 <section>
   <Upload message="Please choose an .rbc file exported from TurnItIn." />
