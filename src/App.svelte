@@ -14,6 +14,10 @@
   <RubricView data={$jsonData} />
 </section>
 
+<footer>
+<p>Source code at <a href="https://github.com/frostframes/rubric-sanity" target="source">github.com/frostframes/rubric-sanity</a></p>
+</footer>
+
 <style>
 header {
     background-color: #48c;
@@ -33,5 +37,9 @@ header a {
 section {
     min-height: 100rem;
     padding: 20px;
+}
+
+footer {
+  text-align: center;
 }
 </style>
