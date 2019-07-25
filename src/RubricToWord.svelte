@@ -109,13 +109,6 @@
 
 </script>
 
-<style>
-button {
-  font-size: large;
-  padding: 10px;
-}
-</style>
-
 {#if rubric !== undefined && rubric.title !== ''}
   <button on:click={onClick}>{ label }</button>
 {/if}
