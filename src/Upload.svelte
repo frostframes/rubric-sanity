@@ -1,22 +1,30 @@
 <script>
-    import { jsonData } from "./stores.js";
+    import { jsonData } from "./stores.js";    
+    import BbRubrics from './BbRubrics.svelte';
     let ok;
+    let bbFile = {};
     const errorMessage = "I'm sorry, that file doesn't look right. ";
     export let message = "Please choose a file";
     function onchange() {
       const file = this.files[0];
       if (file !== undefined) {
         const fileReader = new FileReader();
-        fileReader.readAsText(file);
-        fileReader.onloadend = function() {
-          try {
-            jsonData.set(JSON.parse(fileReader.result));
-            ok = true;
-          } catch (e) {
-            jsonData.set({});
-            ok = false;
-          }
-        };
+        if (file.type !== 'application/x-zip-compressed') {
+          // Not a Blackboard export file, try TurnItIn format
+          fileReader.readAsText(file);
+          fileReader.onloadend = function() {
+            try {
+              jsonData.set(JSON.parse(fileReader.result));
+              ok = true;
+            } catch (e) {
+              jsonData.set({});
+              ok = false;
+            }
+          };
+        } else {
+          // Update Blackboard rubric convertor/chooser
+          bbFile = file;
+        }
       } else {
         jsonData.set({});
         ok = false;
@@ -53,6 +61,7 @@
 </style>
 <h2>{ok === false ? errorMessage : ''}{message}</h2>
 <input type="file" on:change={onchange} class={ok === false ? 'error' : ''} />
+<BbRubrics file={bbFile} />
 
 {#if !ok}
 <p>How to get a .rbc file from TurnItIn</p>

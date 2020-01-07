@@ -10,7 +10,7 @@
 </header>
 
 <section>
-  <Upload message="Please choose an .rbc file exported from TurnItIn." />
+  <Upload message="Please choose an .rbc file exported from TurnItIn or .zip from Blackboard." />
   <RubricView data={$jsonData} />
 </section>
 
