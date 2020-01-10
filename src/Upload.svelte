@@ -10,6 +10,7 @@
       if (file !== undefined) {
         const fileReader = new FileReader();
         if (file.type !== 'application/x-zip-compressed') {
+          bbFile = {};
           // Not a Blackboard export file, try TurnItIn format
           fileReader.readAsText(file);
           fileReader.onloadend = function() {
@@ -24,6 +25,7 @@
         } else {
           // Update Blackboard rubric convertor/chooser
           bbFile = file;
+          ok = true;
         }
       } else {
         jsonData.set({});
