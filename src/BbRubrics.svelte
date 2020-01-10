@@ -124,6 +124,9 @@
                     // Show warnings if conversions have occured
                     message = type.indexOf('PERCENTAGE') !== -1 ? disclaimerPercent : '';
                     message += type.indexOf('RANGE') !== -1 ? disclaimerRanges : '';
+
+                    let cellValue = column.getElementsByTagName(nodeTitle)[0].attributes.value.value;
+                    cellValue = type.indexOf('PERCENTAGE') !== -1 ? cellValue * weighting / 100 : cellValue;
                     
                     rubricJson.RubricCriterionScale.push(
                         {
@@ -131,7 +134,7 @@
                             "description": column.getElementsByTagName("CellDescription")[0].attributes.value.value,
                             "id": numericalId(column.getElementsByTagName("Cell")[0].id),
                             "scale_value": column.getElementsByTagName('Position')[0].attributes.value.value,
-                            "value": '' + Number(column.getElementsByTagName(nodeTitle)[0].attributes.value.value)
+                            "value": '' + Number(cellValue)
                         }
                     )
                 }

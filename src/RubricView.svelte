@@ -111,7 +111,7 @@
       <th>
         <h2>{criterion.name}</h2>
         <p>
-        {#if criterion.value !== '0' && criterion.value !== null}
+        {#if rubric.scoring_method === 2 && criterion.value !== '0' && criterion.value !== null}
           <code>{criterion.value}%</code>
         {/if}
         {#if criterion.description !== null}
@@ -124,7 +124,7 @@
       {#each criterion.scales as scale}
         <td>
           {#if rubric.scoring_method === 4}
-            <code>{scale.value} marks</code><br />
+            <code>{scale.value} points</code><br />
           {/if}
           {scale.description}
         </td>
