@@ -10,7 +10,7 @@
 </header>
 
 <section>
-  <Upload message="Please choose an .rbc file exported from TurnItIn." />
+  <Upload message="Please choose an .rbc file exported from TurnItIn or .zip from Blackboard." />
   <RubricView data={$jsonData} />
 </section>
 
@@ -20,12 +20,12 @@
 
 <style>
 header {
-    background-color: #48c;
-    margin: 0;
-    padding: 30px 30px 20px 30px;
-    box-shadow: 0 5px 5px 0 rgba(0, 0, 0, .3);
-    border-bottom: #249 solid 1px;
-    color: white;
+  background-color: #48c;
+  margin: 0;
+  padding: 30px 30px 20px 30px;
+  box-shadow: 0 5px 5px 0 rgba(0, 0, 0, .3);
+  border-bottom: #249 solid 1px;
+  color: white;
 }
 
 header a {

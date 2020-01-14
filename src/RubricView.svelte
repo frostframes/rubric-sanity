@@ -13,6 +13,7 @@
       rubric = {
         criteria: [],
         scales: data.RubricScale,
+        scoring_method: data.Rubric[0].scoring_method,
         title: data.Rubric[0].name,
       };
       for (let criterionId of data.Rubric[0].criterion) {
@@ -110,18 +111,20 @@
       <th>
         <h2>{criterion.name}</h2>
         <p>
-        {#if criterion.value !== '0' && criterion.value !== null}
+        {#if rubric.scoring_method === 2 && criterion.value !== '0' && criterion.value !== null}
           <code>{criterion.value}%</code>
         {/if}
         {#if criterion.description !== null}
-          <p>{criterion.description}</p>
+          <p>
+            {criterion.description}
+          </p>
         {/if}
         </p>
       </th>
       {#each criterion.scales as scale}
         <td>
-          {#if criterion.value === '0'}
-            <code>{scale.value} marks</code><br />
+          {#if rubric.scoring_method === 4}
+            <code>{scale.value} points</code><br />
           {/if}
           {scale.description}
         </td>
