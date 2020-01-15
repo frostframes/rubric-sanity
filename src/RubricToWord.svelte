@@ -5,103 +5,196 @@
   export let rubric;
   export let label = 'Download Word document';
   const bodyFontName = 'Calibri';
+  const cellBorders = {
+    left: {
+        style: docx.BorderStyle.NONE,
+        size: 0,
+        color: "ffffff",
+    },
+    right: {
+        style: docx.BorderStyle.NONE,
+        size: 0,
+        color: "ffffff",
+    },
+    top: {
+      style: docx.BorderStyle.SINGLE,
+      size: 1,
+      color: "aaaaaa",
+    },
+    bottom: {
+      style: docx.BorderStyle.SINGLE,
+      size: 1,
+      color: "aaaaaa",
+    }
+  };
+  const paragraphStyles = [
+    {
+        id: "descriptor",
+        name: "Descriptor",
+        basedOn: "Normal",
+        next: "Normal",
+        quickFormat: true,
+        run: {
+            font: bodyFontName
+        },
+        paragraph: {},
+    },
+    {
+        id: "number",
+        name: "Number",
+        basedOn: "Normal",
+        next: "Normal",
+        quickFormat: true,
+        run: {
+            italics: true,
+            color: "999999",
+            font: bodyFontName
+        },
+        paragraph: {},
+    },
+    {
+      id: "cellheading",
+      name: "Cell Heading",
+      basedOn: "Normal",
+      next: "Normal",
+      quickFormat: true,
+      run: {
+          size: 26,
+          color: "336699",
+          font: bodyFontName
+      },
+      paragraph: {
+          spacing: {
+              before: 0,
+              after: 0
+          },
+      },
+    },
+  ];
 
-  function setRomanParagraph(string) {
-    const text = new docx.TextRun(string).font(bodyFontName);
-    return new docx.Paragraph(text);
-  }
-
-  function setItalicsParagraph(string) {
-    const text = new docx.TextRun(string).font(bodyFontName).italics();
-    return new docx.Paragraph(text);
-  }
-
-  function removeVerticalBorders(cell) {
-    const borderStyle = docx.BorderStyle.NONE;
-    cell.Borders.addStartBorder(borderStyle, 0, '#ffffff');
-    cell.Borders.addEndBorder(borderStyle, 0, '#ffffff');
-  }
+  const headerCellShading = {
+      fill: "eeeeee",
+  };
 
   function onClick() {
-    const doc = new docx.Document(undefined, {
-        orientation: "landscape",
-        top: 500,
-        right: 500,
-        bottom: 500,
-        left: 500,
-    });
-    const packer = new docx.Packer();
-    let cell;
-    let criterion;
+    const doc = new docx.Document({
+        styles: {
+          paragraphStyles: paragraphStyles
+        }
+      });
 
-    // Add title
-    doc.addParagraph(setRomanParagraph(rubric.title).title());
+    let paragraphs = [new docx.Paragraph({
+      text: rubric.title,
+      heading: docx.HeadingLevel.TITLE,
+    })];
 
     // Create table. Will be added once content is inserted.
     if (rubric.scales.length > 0) {
-      let table = new docx.Table({
-        rows: rubric.criteria.length + 2,
-        columns: rubric.scales.length + 1,
-      });
+        let tableRows = [];
+        // Add table header row
+        let tableCells = [new docx.TableCell({
+            borders: cellBorders,
+            children: [
+              new docx.Paragraph({
+                text: '',
+              })
+            ],
+            shading: headerCellShading,
+          })
+        ];
 
-    // Format empty cells at top-left
-    cell = table.getCell(0, 0);
-    removeVerticalBorders(cell);
-    cell.Borders.addBottomBorder(docx.BorderStyle.NONE, 0, '#ffffff');
-    cell = table.getCell(1, 0);
-    removeVerticalBorders(cell);
-    cell.Borders.addTopBorder(docx.BorderStyle.NONE, 0, '#ffffff');
-
-    // Add header row (scale titles and values)
-    for (let scale of rubric.scales) {
-      cell = table.getCell(0, scale.position);
-      cell.addParagraph(setRomanParagraph(scale.name).center().heading3());
-      removeVerticalBorders(cell);
-      cell.Borders.addBottomBorder(docx.BorderStyle.NONE, 0, '#ffffff');
-      cell = table.getCell(1, scale.position);
-      cell.addParagraph(setItalicsParagraph(scale.value > 0 ? scale.value : '').center());
-      removeVerticalBorders(cell);
-      cell.Borders.addTopBorder(docx.BorderStyle.NONE, 0, '#ffffff');
-    }
-
-    // Add criteria
-    for (let criterion of rubric.criteria) {
-      cell = table.getCell((criterion.position + 1), 0);
-      // Add criterion title
-      cell.addParagraph(setRomanParagraph(criterion.name).heading3());
-      // Add criterion weighting
-      if (criterion.value !== '0' && criterion.value !== null) {
-        cell.addParagraph(setItalicsParagraph(`${criterion.value}%`));
-      }
-      // Add criterion description
-      cell.addParagraph(setRomanParagraph(criterion.description));
-      removeVerticalBorders(cell);
-      // Add cells
-      for (let scaleIndex in criterion.scales) {
-        // index must be a number
-        scaleIndex = Number(scaleIndex);
-        let scale = criterion.scales[scaleIndex];
-        cell = table.getCell((criterion.position + 1), (scaleIndex + 1));
-        if (criterion.value === '0') {
-          cell.addParagraph(setItalicsParagraph(`${scale.value} marks`));
+        for (let scale of rubric.scales) {
+          let tableCell = new docx.TableCell({
+            borders: cellBorders,
+            children: [
+              new docx.Paragraph({
+                text: scale.name,
+                style: 'cellheading',
+              }),
+              new docx.Paragraph({
+                text: scale.value > 0 ? scale.value : '',
+                style: 'number',
+              }),
+            ],
+            shading: headerCellShading,
+          });
+          tableCells.push(tableCell);
         }
-        cell.addParagraph(setRomanParagraph(scale.description));
-        removeVerticalBorders(cell);
+        tableRows.push(new docx.TableRow({
+          children: tableCells
+        }));
+
+        // Add criteria
+        for (let criterion of rubric.criteria) {
+          // Add criterion descriptors
+          tableCells = [new docx.TableCell({
+            borders: cellBorders,
+            children: [
+              new docx.Paragraph({
+                text: criterion.name,
+                style: 'cellheading',
+              }),
+              new docx.Paragraph({
+                text: criterion.description !== null ? criterion.description : '',
+                style: 'descriptor',
+              }),
+              new docx.Paragraph({
+                text: criterion.value !== '0' && criterion.value !== null ? criterion.value + '%' : '',
+                style: 'number',
+              }),
+            ],
+            shading: headerCellShading,
+          })];
+          // add criterion scales
+          for (let criterionScale of criterion.scales) {
+            let tableCell = new docx.TableCell({
+              borders: cellBorders,
+              children: [
+                new docx.Paragraph({
+                  text: criterionScale.description,
+                  style: 'descriptor',
+                }),
+                new docx.Paragraph({
+                  text: criterionScale.value !== '0' && criterionScale.value !== null ? criterionScale.value : '',
+                  style: 'number',
+                }),
+              ],
+            });
+            tableCells.push(tableCell);
+          }
+          tableRows.push(new docx.TableRow({
+            children: tableCells
+          }));
+        }
+
+        paragraphs.push(new docx.Table({
+          rows: tableRows,
+        }));
+    } else {
+      for (let criterion of rubric.criteria) {
+        paragraphs.push(new docx.Paragraph({
+          text: criterion.name,
+          style: 'cellheading',
+        }));
+        paragraphs.push(new docx.Paragraph({
+          text: criterion.description !== null ? criterion.description : '',
+          style: 'descriptor',
+        }));
       }
     }
 
-    // Add the table into the document
-    doc.addTable(table);
+    // Add the content
+    doc.addSection({
+      orientation: docx.PageOrientation.LANDSCAPE,
+      top: 500,
+      right: 500,
+      bottom: 500,
+      left: 500,
+      children: paragraphs,  
+    });
 
-  }
-   else {
-    for (let criterion of rubric.criteria) {
-      doc.addParagraph(setRomanParagraph(criterion.name).heading2());
-      doc.addParagraph(setRomanParagraph(criterion.description));
-    }
-  }
-      // Download the word doc as a file to the client web browser
-    packer.toBlob(doc).then((blob) => {
+    // Download the word doc as a file to the client web browser
+    docx.Packer.toBlob(doc).then((blob) => {
       FileSaver.saveAs(blob, `${rubric.title}.docx`);
     });
   }
