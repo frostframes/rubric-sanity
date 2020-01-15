@@ -126,39 +126,54 @@
 
         // Add criteria
         for (let criterion of rubric.criteria) {
-          // Add criterion descriptors
+          // Add criterion descriptor content
+          let headerContent = [
+            new docx.Paragraph({
+              text: criterion.name,
+              style: 'cellheading',
+            })
+          ];
+          if (criterion.description !== null ) {
+            headerContent.push(
+              new docx.Paragraph({
+                text: criterion.description,
+                style: 'descriptor',
+              })
+            );
+          }
+          if (rubric.scoring_method === 2 && criterion.value !== '0' && criterion.value !== null) {
+            headerContent.push(
+              new docx.Paragraph({
+                text: criterion.value + '%',
+                style: 'number',
+              })
+            );
+          }
           tableCells = [new docx.TableCell({
             borders: cellBorders,
-            children: [
-              new docx.Paragraph({
-                text: criterion.name,
-                style: 'cellheading',
-              }),
-              new docx.Paragraph({
-                text: criterion.description !== null ? criterion.description : '',
-                style: 'descriptor',
-              }),
-              new docx.Paragraph({
-                text: criterion.value !== '0' && criterion.value !== null ? criterion.value + '%' : '',
-                style: 'number',
-              }),
-            ],
+            children: headerContent,
             shading: headerCellShading,
           })];
           // add criterion scales
           for (let criterionScale of criterion.scales) {
-            let tableCell = new docx.TableCell({
-              borders: cellBorders,
-              children: [
+            let cellContent = [];
+            if (rubric.scoring_method === 4) {
+              cellContent.push(
                 new docx.Paragraph({
-                  text: criterionScale.description,
-                  style: 'descriptor',
-                }),
-                new docx.Paragraph({
-                  text: criterionScale.value !== '0' && criterionScale.value !== null ? criterionScale.value : '',
+                  text: criterionScale.value + ' points',
                   style: 'number',
                 }),
-              ],
+              );
+            }
+            cellContent.push(
+              new docx.Paragraph({
+                text: criterionScale.description,
+                style: 'descriptor',
+              }),
+            );
+            let tableCell = new docx.TableCell({
+              borders: cellBorders,
+              children: cellContent,
             });
             tableCells.push(tableCell);
           }
