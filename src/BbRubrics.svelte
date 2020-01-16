@@ -8,6 +8,7 @@
     const prompt = 'Please choose one of the rubrics contained within the uploaded file.'; 
     let message = '';
     let parser = new DOMParser();
+ 
     let rubrics = [];
     let rubricId = '';
     let rubricJson = {}
@@ -28,10 +29,11 @@
     let zipObject = {};
 
     $: onLoad(file);
-    $: onChange(rubricId);
+    $: onSelect(rubricId);
 
     function onLoad(file) {
         rubrics = [];
+        message = '';
         JSZip.loadAsync(file).
         then(function (zip) {
             // Use the manifest to find which file contains the rubric data
@@ -77,9 +79,10 @@
         });
     }
 
-    function onChange(rubricId) {
+    function onSelect(rubricId) {
         jsonData.set({});
         rubricJson = JSON.parse(rubricJsonTemplate);
+        message = '';
         // Create TurnItIn formatted json
         if (rubricsXml !== undefined && rubricId !== undefined) {
             let type = rubricsXml[rubricId].getElementsByTagName('Type')[0].attributes.value.value
