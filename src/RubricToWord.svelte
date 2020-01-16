@@ -1,5 +1,4 @@
 <script>
-  import { beforeUpdate } from 'svelte';
   import docx from 'docx';
   import FileSaver from 'file-saver';
   export let rubric;
